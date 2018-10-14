@@ -2,7 +2,9 @@
 title: "ATM Cash Optimization"
 author: "Sena Buwana"
 date: "October 06, 2018"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 requiring the libraries
@@ -20,12 +22,16 @@ library('MLmetrics')
 Import the data set train
 ```{r}
 atm.train <- read.csv('D:/Sena/Projects/Finhacks/atm_train.csv')
+#Visualize
+head(atm.train,5)
 ```
 
 Processing the data and split into groups of ATMs
 ```{r}
 atm.withdrawals <- atm.train %>% select(no..ATM,date,Withdrawals)
 atm.grouped <- split(atm.withdrawals, f = atm.withdrawals$no..ATM)
+#Visualize
+head(atm.grouped,5)
 ```
 
 Creating list of timeseries objects
@@ -46,6 +52,9 @@ for(i in 1:10626){
   atm.ts.train[[i]] <- first(atm.ts[[i]], '10 weeks')
   atm.ts.test[[i]] <- last(atm.ts[[i]], '1 week')
 }
+#Visualize
+head(atm.ts.train[[1]],5)
+head(atm.ts.test[[1]],5)
 ```
 
 
@@ -93,7 +102,7 @@ runArima <- function(ts){
 
 Fit model and match prediction with existing split data from train dataset
 ```{r}
-atmtstestp <- list()
+atm.ts.test.p <- list()
 for (i in 1:10626) {
   days <- length(atm.ts.test[[i]])
   prediction <- c()
@@ -102,15 +111,17 @@ for (i in 1:10626) {
   for (j in 1:days) {
     prediction[j] <- fitted.Vector[j]
   }
-  atmtstestp[[i]] <- data.frame(no=i,pred=prediction,real=atm.ts.test[[i]])
+  atm.ts.test.p[[i]] <- data.frame(no=i,pred=prediction,real=atm.ts.test[[i]])
 }
+head(atm.ts.test.p)
 ```
 
 Calculate MAPE for each ATM
 ```{r}
 for(i in 1:10626){
-  atmtstestp[[i]]$mape <- MAPE(atmtstestp[[i]]$pred,atmtstestp[[i]]$real)
+  atm.ts.test.p[[i]]$mape <- MAPE(atm.ts.test.p[[i]]$pred,atm.ts.test.p[[i]]$real)
 }
+head(atm.ts.test.p)
 ```
 
 
