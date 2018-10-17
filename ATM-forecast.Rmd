@@ -21,7 +21,7 @@ library('MLmetrics')
 
 Import the data set train
 ```{r}
-atm.train <- read.csv('D:/Sena/Projects/Finhacks/atm_train.csv')
+atm.train <- read.csv('atm_train.csv')
 #Visualize
 head(atm.train,5)
 ```
@@ -127,7 +127,7 @@ head(atm.ts.test.p)
 
 Import test dataset
 ```{r}
-atm.test <- read.table('D:/Sena/Projects/Finhacks/atm_test.csv', sep = ';', header=T)
+atm.test <- read.table('atm_test.csv', sep = ';', header=T)
 atm.test.grouped <- split(atm.test, f = atm.test$no..ATM)
 ```
 
